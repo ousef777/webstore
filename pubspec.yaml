@@ -15,7 +15,17 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/Images/
+    - assets/Images/skincare1.png 
+    - assets/Images/skencare2.png 
+    - assets/Images/skencare3.png 
+    - assets/Images/skencare4.png 
+    - assets/Images/skincare5.png 
+    - assets/Images/skincare6.png 
+    - assets/Images/skincare7.png 
+    - assets/Images/skencare8.png
