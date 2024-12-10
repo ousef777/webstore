@@ -9,7 +9,7 @@ class Cart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        // backgroundColor: Colors.blue,
         title: const Text("Cart"),
       ),
       body: Column(
@@ -36,6 +36,19 @@ class Cart extends StatelessWidget {
               }
             ),
           ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Total: \$50",
+                  style: TextStyle(fontSize: 40),
+                ),
+              )
+            ],
+          ),
+          const SizedBox(height: 30,),
           ElevatedButton(
             onPressed: () {
               GoRouter.of(context).push('/checkout');

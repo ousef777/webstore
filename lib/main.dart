@@ -23,7 +23,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GoRouter router = GoRouter(
-      initialLocation: '/checkout', // Main page
+      initialLocation: '/home', // Main page
       routes: [
         GoRoute(
           path: '/home',

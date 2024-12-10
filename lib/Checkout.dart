@@ -22,8 +22,11 @@ class Checkout extends StatelessWidget {
             const SizedBox(height: 20,),
                 ElevatedButton(
                   onPressed: () {
-                    if (!_formKey.currentState!.validate()) return;
+                    bool val = !_formKey.currentState!.validate();
+                    bool val2 = !_formKey2.currentState!.validate();
+                    if (val || val2) return;
                     _formKey.currentState!.save();
+                    _formKey2.currentState!.save();
                   }, 
                   child: const Text("Submit")
                 )
