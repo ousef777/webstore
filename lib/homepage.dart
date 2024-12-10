@@ -714,7 +714,7 @@ class Homepage extends StatelessWidget {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 image: AssetImage(images[index]),
-                                fit: BoxFit.cover,
+                                // fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
