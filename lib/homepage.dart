@@ -782,8 +782,8 @@ class Homepage extends StatelessWidget {
         onPressed: () {
           GoRouter.of(context).push('/cart');
         },
-        child: const Icon(Icons.shop, color: Colors.black),
         backgroundColor: Colors.white.withOpacity(0.8),
+        child: const Icon(Icons.shop, color: Colors.black),
       ),
     );
   }
