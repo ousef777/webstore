@@ -289,7 +289,7 @@ class Cart extends StatelessWidget {
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   "Total: KWD 50",
-                  style: TextStyle(fontSize: 40),
+                  style: TextStyle(fontSize: 25),
                 ),
               ),
             ],
