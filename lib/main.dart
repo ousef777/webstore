@@ -4,13 +4,16 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:webstore/Checkout.dart';
 import 'package:webstore/homepage.dart';
-import 'package:webstore/provider.dart';
+import 'package:webstore/provider/cart_provider.dart';
+import 'package:webstore/provider/payment_provider.dart';
+import 'package:webstore/services/payment.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-      ChangeNotifierProvider<CartProvider>(create: (_) => CartProvider())
+      ChangeNotifierProvider<CartProvider>(create: (_) => CartProvider()),
+      ChangeNotifierProvider<PaymentProvider>(create: (_) => PaymentProvider())
     ],
     child: const MainApp(),
     )

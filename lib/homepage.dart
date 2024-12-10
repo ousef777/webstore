@@ -641,21 +641,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:webstore/provider.dart';
+import 'package:webstore/provider/cart_provider.dart';
 
 // ignore: must_be_immutable
 class Homepage extends StatelessWidget {
   Homepage({super.key});
 
-  List<Map<String, String>> data = [
-    {"name": "cosrx snail serum", "price": " KWD 6.00"},
-    {"name": "cosrx snail cream", "price": " KWD 15.00"},
-    {"name": "cosrx snail set", "price": " KWD 8.00"},
-    {"name": "cosrx mini snail serum", "price": " KWD 20.00"},
-    {"name": "anua cleansing foam", "price": " KWD 18.00"},
-    {"name": "anua cleansing oil", "price": " KWD 6.00"},
-    {"name": "anua cleansing set", "price": " KWD 7.00"},
-    {"name": "anua tonic", "price": " KWD 5.00"},
+  List<Map<String, dynamic>> data = [
+    {"name": "cosrx snail serum", "price": 6.00},
+    {"name": "cosrx snail cream", "price": 15.00},
+    {"name": "cosrx snail set", "price": 8.00},
+    {"name": "cosrx mini snail serum", "price": 20.00},
+    {"name": "anua cleansing foam", "price": 18.00},
+    {"name": "anua cleansing oil", "price": 6.00},
+    {"name": "anua cleansing set", "price": 7.00},
+    {"name": "anua tonic", "price": 5.00},
   ];
 
   List<String> images = [
@@ -740,7 +740,7 @@ class Homepage extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                data[index]["price"]!,
+                                "${data[index]["price"]!} KWD",
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
@@ -754,7 +754,7 @@ class Homepage extends StatelessWidget {
                                 onPressed: () {
                                   context
                                       .read<CartProvider>()
-                                      .addCart(data[index]["name"]!);
+                                      .addCart(data[index]["name"]!, data[index]["price"]!);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,

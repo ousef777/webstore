@@ -1,13 +1,23 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:webstore/homepage.dart';
+import 'package:webstore/provider/cart_provider.dart';
+import 'package:webstore/provider/payment_provider.dart';
+import 'package:webstore/services/payment.dart';
 
 class Checkout extends StatelessWidget {
   Checkout({super.key});
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
+  int cardNumber = 0;
+  double amount = 0;
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    amount = context.read<CartProvider>().total;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Checkout"),
@@ -23,17 +33,105 @@ class Checkout extends StatelessWidget {
           height: 20,
         ),
         ElevatedButton(
-            onPressed: () {
-              bool val = !_formKey.currentState!.validate();
+            onPressed: () async {
+              // bool val = !_formKey.currentState!.validate();
               bool val2 = !_formKey2.currentState!.validate();
-              if (val || val2) return;
-              _formKey.currentState!.save();
+              // if (val || val2) return;
+              // _formKey.currentState!.save();
               _formKey2.currentState!.save();
+              print(cardNumber);
+              print(amount);
+              var response = await context.read<PaymentProvider>().proccessPayment(cardNumber: cardNumber, amount: amount);
+              print(response);
+              if (response['error'] != null) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response['error'])));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Successfull")));
+                GoRouter.of(context).go('/home');
+              }
             },
             child: const Text("Pay Now"))
       ])),
     );
   }
+
+  Widget paymentForm(GlobalKey<FormState> formKey) {
+  return SizedBox(
+    width: 300,
+    child: Form(
+      key: formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Row(
+            children: [
+              Text(
+                "Payment form",
+                style: TextStyle(fontSize: 24),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          TextFormField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              // for below version 2 use this
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              // for version 2 and greater youcan also use this
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            decoration: const InputDecoration(
+                labelText: "Card Number",
+                hintText: "0000 0000 0000 0000",
+                border: OutlineInputBorder()),
+            validator: (value) {
+              if (value!.isEmpty) return "fill the empty blank";
+              return null;
+            },
+            onSaved: (newValue) {
+              cardNumber = int.parse(newValue!);
+            },
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              // for below version 2 use this
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              // for version 2 and greater youcan also use this
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            maxLength: 3,
+            decoration: const InputDecoration(
+                labelText: "CVV", border: OutlineInputBorder()),
+            validator: (value) {
+              if (value!.isEmpty) return "fill the empty blank";
+              return null;
+            },
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+                labelText: "Exp date",
+                hintText: "MM/YY",
+                border: OutlineInputBorder()),
+            validator: (value) {
+              if (value!.isEmpty) return "fill the empty blank";
+              return null;
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+  }
+
 }
 
 Widget infoForm(GlobalKey<FormState> formKey) {
@@ -82,80 +180,6 @@ Widget infoForm(GlobalKey<FormState> formKey) {
             height: 10,
           ),
           TextFormField(
-            decoration: const InputDecoration(
-                labelText: "CVV", border: OutlineInputBorder()),
-            validator: (value) {
-              if (value!.isEmpty) return "fill the empty blank";
-              return null;
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-                labelText: "Exp date",
-                hintText: "MM/YY",
-                border: OutlineInputBorder()),
-            validator: (value) {
-              if (value!.isEmpty) return "fill the empty blank";
-              return null;
-            },
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget paymentForm(GlobalKey<FormState> formKey) {
-  return SizedBox(
-    width: 300,
-    child: Form(
-      key: formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Row(
-            children: [
-              Text(
-                "Payment form",
-                style: TextStyle(fontSize: 24),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          TextFormField(
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              // for below version 2 use this
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              // for version 2 and greater youcan also use this
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            decoration: const InputDecoration(
-                labelText: "Card Number",
-                hintText: "0000 0000 0000 0000",
-                border: OutlineInputBorder()),
-            validator: (value) {
-              if (value!.isEmpty) return "fill the empty blank";
-              return null;
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              // for below version 2 use this
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              // for version 2 and greater youcan also use this
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            maxLength: 3,
             decoration: const InputDecoration(
                 labelText: "CVV", border: OutlineInputBorder()),
             validator: (value) {
