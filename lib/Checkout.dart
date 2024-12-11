@@ -20,50 +20,70 @@ class Checkout extends StatelessWidget {
     amount = context.read<CartProvider>().total;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Checkout"),
+        backgroundColor:
+            Colors.white.withOpacity(0.8), // Set AppBar background color
+        title: const Text(
+          "Checkout",
+          style: TextStyle(
+              color:
+                  Colors.black), // Set title color to contrast with background
+        ),
+        iconTheme: const IconThemeData(
+            color: Colors.black), // Set icon color to contrast with background
       ),
       body: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        // infoForm(_formKey),
-        const SizedBox(
-          height: 30,
-        ),
-        paymentForm(_formKey2),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        "Total: $amount KWD",
-                        style: TextStyle(fontSize: 40),
-                      ),
-                    )
-                  ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            infoForm(_formKey),
+            const SizedBox(height: 30),
+            paymentForm(_formKey2),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                bool val = !_formKey.currentState!.validate();
+                bool val2 = !_formKey2.currentState!.validate();
+                if (val || val2) return;
+                _formKey.currentState!.save();
+                _formKey2.currentState!.save();
+
+                // Show success dialog
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Payment Successful"),
+                      content: const Text(
+                          "Your payment has been processed successfully."),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("OK"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white
+                    .withOpacity(0.8), // Set button background color
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 5), // Match button padding
+              ),
+              child: const Text(
+                "Pay Now",
+                style: TextStyle(
+                  color: Colors.black, // Set text color
+                  fontSize: 20, // Set font size
                 ),
-        ElevatedButton(
-            onPressed: () async {
-              // bool val = !_formKey.currentState!.validate();
-              bool val2 = !_formKey2.currentState!.validate();
-              // if (val || val2) return;
-              // _formKey.currentState!.save();
-              _formKey2.currentState!.save();
-              print(cardNumber);
-              print(amount);
-              var response = await context.read<PaymentProvider>().proccessPayment(cardNumber: cardNumber, amount: amount);
-              print(response);
-              if (response['error'] != null) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response['error'])));
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Successfull")));
-                GoRouter.of(context).go('/home');
-              }
-            },
-            child: const Text("Pay Now"))
-      ])),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -83,9 +103,8 @@ class Checkout extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           TextFormField(
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
@@ -106,9 +125,7 @@ class Checkout extends StatelessWidget {
               cardNumber = int.parse(newValue!);
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           TextFormField(
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
@@ -125,9 +142,7 @@ class Checkout extends StatelessWidget {
               return null;
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           TextFormField(
             decoration: const InputDecoration(
                 labelText: "Exp date",
@@ -162,25 +177,13 @@ Widget infoForm(GlobalKey<FormState> formKey) {
               ),
             ],
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          // Expanded(
-          //   child: Row(
-          //     children: [
-          //       TextFormField(
-          //         decoration: const InputDecoration(labelText: "First Name", border: OutlineInputBorder()),
-          //       ),
-          //       TextFormField(
-          //         decoration: const InputDecoration(labelText: "Last Name", border: OutlineInputBorder()),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 15),
           TextFormField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              FilteringTextInputFormatter.digitsOnly,
+            ],
             decoration: const InputDecoration(
                 labelText: "Address", border: OutlineInputBorder()),
             validator: (value) {
@@ -188,10 +191,14 @@ Widget infoForm(GlobalKey<FormState> formKey) {
               return null;
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           TextFormField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            maxLength: 3,
             decoration: const InputDecoration(
                 labelText: "CVV", border: OutlineInputBorder()),
             validator: (value) {
@@ -199,9 +206,7 @@ Widget infoForm(GlobalKey<FormState> formKey) {
               return null;
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           TextFormField(
             decoration: const InputDecoration(
                 labelText: "Exp date",
