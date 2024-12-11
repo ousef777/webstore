@@ -35,37 +35,64 @@ class Checkout extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            infoForm(_formKey),
+            // infoForm(_formKey),
             const SizedBox(height: 30),
             paymentForm(_formKey2),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                bool val = !_formKey.currentState!.validate();
+              onPressed: () async {
+                // bool val = !_formKey.currentState!.validate();
                 bool val2 = !_formKey2.currentState!.validate();
-                if (val || val2) return;
-                _formKey.currentState!.save();
+                // if (val || val2) return;
+                // _formKey.currentState!.save();
                 _formKey2.currentState!.save();
-
-                // Show success dialog
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text("Payment Successful"),
-                      content: const Text(
-                          "Your payment has been processed successfully."),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("OK"),
+                var response = await context.read<PaymentProvider>().proccessPayment(cardNumber: cardNumber, amount: amount);
+                print(response);
+                if (response['error'] != null) {
+                  ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
+                    content: Text(response['error']),
+                    actions: [
+                          TextButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                            },
+                            child: const Text("OK"),
+                          ),
+                        ],
+                    ));
+                } else {
+                  // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Successfull")));
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Payment Successful"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check),
+                            const Text(
+                                "Your payment has been processed successfully."),
+                          ],
                         ),
-                      ],
-                    );
-                  },
-                );
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("OK"),
+                          ),
+                        ],
+                      );
+                    },
+                  ).then((value) {
+                    context.read<CartProvider>().cart = [];
+                    context.read<CartProvider>().total = 0;
+                    GoRouter.of(context).go('/home');
+                  }
+                  );
+                }
+                
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white
