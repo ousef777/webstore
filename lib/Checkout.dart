@@ -24,7 +24,7 @@ class Checkout extends StatelessWidget {
       ),
       body: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        infoForm(_formKey),
+        // infoForm(_formKey),
         const SizedBox(
           height: 30,
         ),
@@ -32,6 +32,18 @@ class Checkout extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
+        Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Total: $amount KWD",
+                        style: TextStyle(fontSize: 40),
+                      ),
+                    )
+                  ],
+                ),
         ElevatedButton(
             onPressed: () async {
               // bool val = !_formKey.currentState!.validate();
