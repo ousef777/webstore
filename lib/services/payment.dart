@@ -5,7 +5,7 @@ class DioClient {
 
   Future<Map<String, dynamic>> proccessPayment({required int cardNumber, required double amount}) async {
     try {
-      Response response = await Client.dio.post('/cards/pay', data: {"cardNumber": cardNumber, "amount": amount});
+      Response response = await Client.dio.post('/cards/pay', data: {"paramName": "Boutique", "cardNumber": cardNumber, "amount": amount});
       return {'message': response.data["message"]};
     } on DioException catch (error) {
       // print(error.response!.data);
